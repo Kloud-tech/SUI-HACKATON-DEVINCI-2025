@@ -1,35 +1,12 @@
 import type React from 'react';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Bangers } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './global.css';
 import { Providers } from './providers';
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' });
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
-const bangers = Bangers({ subsets: ['latin'], weight: '400', variable: '--font-bangers' });
-
 export const metadata: Metadata = {
-  title: 'Rare Egg Collection - NFT Marketplace',
-  description: 'Discover the most exclusive digital eggs in the metaverse',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  title: 'CryptoMonsters - Hatch, Discover & Evolve',
+  description: 'Explore the CryptoMonsters lab, marketplace, and battle-ready NFT roster.',
 };
 
 export default function RootLayout({
@@ -38,8 +15,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans antialiased ${bangers.variable} ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Material+Symbols+Outlined&display=swap"
+        />
+      </head>
+      <body className="bg-[#131022] text-white antialiased">
         <Providers>
           {children}
           <Analytics />

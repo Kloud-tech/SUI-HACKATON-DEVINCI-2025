@@ -6,10 +6,10 @@ import {
   SuiClientProvider,
   WalletProvider,
 } from '@mysten/dapp-kit';
-import { EnokiFlowProvider } from '@mysten/enoki/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SUI_RPC_URL, ENOKI_API_KEY } from '../src/config/sui';
+import { SUI_RPC_URL } from '../src/config/sui';
 import '@mysten/dapp-kit/dist/index.css';
+import { useEnokiWalletRegistration } from '@/src/lib/useEnokiWalletRegistration';
 
 const { networkConfig } = createNetworkConfig({
   testnet: { url: SUI_RPC_URL },
@@ -18,12 +18,12 @@ const { networkConfig } = createNetworkConfig({
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: ReactNode }) {
+  useEnokiWalletRegistration();
+
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-        <EnokiFlowProvider apiKey={ENOKI_API_KEY}>
-          <WalletProvider autoConnect>{children}</WalletProvider>
-        </EnokiFlowProvider>
+        <WalletProvider autoConnect>{children}</WalletProvider>
       </SuiClientProvider>
     </QueryClientProvider>
   );

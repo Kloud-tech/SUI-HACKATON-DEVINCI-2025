@@ -5,25 +5,47 @@ export const SUI_PACKAGE_ID =
 export const SUI_RPC_URL =
   process.env.NEXT_PUBLIC_SUI_RPC_URL ?? 'https://fullnode.testnet.sui.io:443';
 
-export const EGG_PRICES_MIST: Record<number, bigint> = {
-  0: 100_000_000n,
-  1: 500_000_000n,
-  2: 1_000_000_000n,
-  3: 2_000_000_000n,
+export type EggRarity = 'common' | 'rare' | 'epic' | 'legendary';
+
+export const EGG_RARITIES: readonly EggRarity[] = ['common', 'rare', 'epic', 'legendary'] as const;
+
+export const HATCHERY_RARITY_CODE: Record<EggRarity, number> = {
+  common: 1,
+  rare: 2,
+  epic: 3,
+  legendary: 4,
 };
 
-export const RARITY_LABELS: Record<number, string> = {
-  0: 'Common',
-  1: 'Rare',
-  2: 'Epic',
-  3: 'Legendary',
+export const EGG_PRICES_CIM: Record<EggRarity, bigint> = {
+  common: 100n,
+  rare: 500n,
+  epic: 1_000n,
+  legendary: 5_000n,
 };
 
-export const RARITY_IMAGES: Record<number, string> = {
-  0: '/egg_commune.png',
-  1: '/egg_rare.png',
-  2: '/egg_epic.png',
-  3: '/egg_legendary.png',
+export const RARITY_LABELS: Record<EggRarity, string> = {
+  common: 'Common',
+  rare: 'Rare',
+  epic: 'Epic',
+  legendary: 'Legendary',
 };
 
-export const ENOKI_API_KEY = process.env.NEXT_PUBLIC_ENOKI_API_KEY ?? 'enoki_public_...'; // Replace with your actual Enoki Public Key
+const RARITY_IMAGE_BASE = process.env.NEXT_PUBLIC_RARITY_IMAGE_BASE ?? '/api/rarity-art?rarity=';
+
+export const RARITY_IMAGES: Record<EggRarity, string> = {
+  common: `${RARITY_IMAGE_BASE}common`,
+  rare: `${RARITY_IMAGE_BASE}rare`,
+  epic: `${RARITY_IMAGE_BASE}epic`,
+  legendary: `${RARITY_IMAGE_BASE}legendary`,
+};
+
+export const MIST_PER_SUI = 1_000_000_000n;
+
+export function formatMistToSui(value: bigint, fractionDigits = 2): string {
+  const sui = Number(value) / Number(MIST_PER_SUI);
+  return `${sui.toFixed(fractionDigits)} SUI`;
+}
+
+export function formatCim(amount: bigint): string {
+  return `${amount.toString()} CIM`;
+}
