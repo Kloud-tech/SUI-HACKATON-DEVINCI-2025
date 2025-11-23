@@ -202,6 +202,56 @@ def save_to_walrus(data: dict) -> str:
 
 ---
 
+## ⚔️ Flux BattleRequest On-Chain
+
+La boucle de combat fonctionne désormais **à la demande** via un événement on-chain. Le workflow complet est:
+
+1. **Le joueur** appelle `request_battle` sur `monster_battle.move` avec deux monstres.
+2. Le contrat émet un événement `BattleRequest` (contenant `request_id`, les IDs des monstres et le requester).
+3. **Le listener** (`battle_request_listener.py`) récupère l'événement via RPC, lance le combat dans l'enclave Nautilus et signe le résultat.
+4. L'agent appelle `settle_battle` avec `request_id`, `winner`, `loser` et `xp_gain`. L'événement `BattleEvent` relie ainsi la requête et le résultat.
+
+### Configuration requise
+
+```bash
+cp .env.example .env  # puis renseigner les IDs réels
+export BATTLE_PACKAGE_ID=0xYOUR_PACKAGE_ID
+export BATTLE_CONFIG_ID=0xYOUR_BATTLE_CONFIG
+export SUI_RPC_URL=https://fullnode.testnet.sui.io
+export AGENT_MODE=listener
+```
+
+Les variables optionnelles (poll interval, batch size, fichier de curseur) sont documentées dans `.env.example`.
+
+### Lancement du listener
+
+```bash
+cd agent_architecture/nautilus
+pip install -r requirements.txt
+python3 app.py  # AGENT_MODE=listener par défaut
+```
+
+Pour tester sans `app.py`, vous pouvez également lancer directement:
+
+```bash
+python3 battle_request_listener.py
+```
+
+### Déclencher un combat côté Sui
+
+```bash
+sui client call \
+    --package $BATTLE_PACKAGE_ID \
+    --module monster_battle \
+    --function request_battle \
+    --args $BATTLE_CONFIG_ID 0xMONSTER_ONE 0xMONSTER_TWO \
+    --gas-budget 20000000
+```
+
+Chaque demande sera consommée une fois que le listener l'aura traitée et `settle_battle` devra être exécuté par l'agent. `settle_battle` prend maintenant un cinquième argument (`request_id`) pour assurer la traçabilité entre l'événement de demande et l'événement de résultat.
+
+---
+
 ## 📊 Comparaison: Simulation vs Production
 
 | Aspect              | `hello_nautilus.py` (Local) | `src/nautilus-server/` (AWS) |

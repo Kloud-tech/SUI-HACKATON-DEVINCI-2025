@@ -1,0 +1,28 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY battle_engine.py .
+COPY battle_orchestrator.py .
+COPY battle_request_listener.py .
+COPY nautilus_enclave.py .
+COPY app.py .
+
+# Environment defaults (override with .env)
+ENV AGENT_MODE=listener
+ENV BATTLE_REQUEST_POLL_INTERVAL=12
+ENV BATTLE_REQUEST_BATCH_SIZE=5
+
+# Run the listener
+CMD ["python3", "app.py"]

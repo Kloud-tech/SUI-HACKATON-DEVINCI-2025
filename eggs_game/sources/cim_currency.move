@@ -1,5 +1,5 @@
 module game::cim_currency {
-    use sui::coin;
+    use sui::coin::{Self, TreasuryCap};
     
     
     // Le One Time Witness (doit avoir le même nom que le module en majuscules)
@@ -23,5 +23,16 @@ module game::cim_currency {
 
         // On envoie la capacité de "mint" (trésorerie) au créateur
         transfer::public_transfer(treasury, tx_context::sender(ctx));
+    }
+
+    // Fonction pour mint des tokens (pour les tests)
+    public fun mint(
+        treasury: &mut TreasuryCap<CIM_CURRENCY>,
+        amount: u64,
+        recipient: address,
+        ctx: &mut TxContext
+    ) {
+        let coin = coin::mint(treasury, amount, ctx);
+        transfer::public_transfer(coin, recipient);
     }
 }

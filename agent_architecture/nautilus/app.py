@@ -913,16 +913,27 @@ class ChimeraAgent:
                 
         except KeyboardInterrupt:
             print("\n\n Arrêt de l'agent...")
+
+    def run_listener_mode(self):
+        """Mode qui écoute les BattleRequest on-chain et les règle via le TEE."""
+        print("[START] Listener BattleRequest on-chain\n")
+        from battle_request_listener import BattleRequestListener
+
+        listener = BattleRequestListener()
+        listener.run()
     
     def run(self):
         """Point d'entrée principal - lance le mode combat NFT par défaut"""
-        mode = os.getenv("AGENT_MODE", "battle").lower()
+        mode = os.getenv("AGENT_MODE", "listener").lower()
         
-        if mode == "trading":
+        if (mode == "trading"):
             print("[MODE] Trading activé (expérimental)\n")
             self.run_trading_mode()
+        elif mode == "listener":
+            print("[MODE] Listener on-chain activé (défaut)\n")
+            self.run_listener_mode()
         else:
-            print("[MODE] Battle NFT activé (défaut)\n")
+            print("[MODE] Battle NFT manuel\n")
             self.run_battle_mode()
 
 

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  battle-listener:
+    build:
+      context: .
+      dockerfile: Dockerfile.listener
+    container_name: chimera-battle-listener
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./.battle_listener.cursor:/app/.battle_listener.cursor
+    restart: unless-stopped
+    networks:
+      - chimera-network
+
+networks:
+  chimera-network:
+    driver: bridge
