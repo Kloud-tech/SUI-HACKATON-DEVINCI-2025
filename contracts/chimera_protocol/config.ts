@@ -1,16 +1,16 @@
 export const NETWORK = "testnet";
 
-// L adresse du Package (Code déployé)
-export const PACKAGE_ID = "0x2cc49178b0381ffeb4eb4af8b6c3f55c6594a242ad2063e3b0530ec1fb0d1b53";
+// 1. L'adresse du Package (Nouveau déploiement)
+export const PACKAGE_ID = "0x58310d0f0ba3013e87b32b538b6639dbb1586d34b3328988a63469069d415cf3";
 
-// L adresse de la Boutique (Objet Partagé pour acheter des oeufs)
-export const SHOP_ID = "0xd30c6dcab414c2a13102e9fa01e1d8d69465e522196b3a7ce26c139090966773";
+// 2. L'adresse de la Boutique (Objet Partagé)
+export const SHOP_ID = "0xb2242ae1ede6cfc3901b3edd0f39f097396670059df9c05dd5b8fd2dd0ce85af";
 
-// L adresse de la Configuration de Combat (Contient adresse du TEE)
-export const BATTLE_CONFIG_ID = "0xb46f9f6ad19d7413845a83beeec537d5d80ed2a54009a14f2247e34ba067607c";
+// 3. L'adresse de la Config de Combat (Objet Partagé pour le TEE)
+export const BATTLE_CONFIG_ID = "0x9fd8ab371ea32fac24bd9879d09299da2c86359385b8b1ba50e59e4fbc39b7ae";
 
-// Le Type complet de la monnaie (Pour filtrer les coins du wallet)
-export const CIM_COIN_TYPE = `${PACKAGE_ID}::cim_currency::CIM_CURRENCY`;
+// 4. Le Type de la Monnaie (ATTENTION : C'est maintenant du CIM !)
+export const GEM_COIN_TYPE = `${PACKAGE_ID}::cim_currency::CIM_CURRENCY`;
 
-// L adresse système de Horloge (Toujours 0x6 sur Sui)
+// 5. L'Horloge (Toujours 0x6)
 export const CLOCK_ID = "0x6";
