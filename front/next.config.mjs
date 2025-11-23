@@ -6,6 +6,12 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
       },
     ],
+    localPatterns: [
+      {
+        pathname: '/api/rarity-art',
+        search: 'rarity=*',
+      },
+    ],
   },
 };
 
