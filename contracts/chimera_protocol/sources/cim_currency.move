@@ -1,18 +1,18 @@
-module game::gem_currency {
+module game::cim_currency {
     use sui::coin;
     
     
     // Le One Time Witness (doit avoir le même nom que le module en majuscules)
-    public struct GEM_CURRENCY has drop {}
+    public struct CIM_CURRENCY has drop {}
 
     // Initialisation du token
     #[allow(deprecated_usage)]
-    fun init(witness: GEM_CURRENCY, ctx: &mut TxContext) {
+    fun init(witness: CIM_CURRENCY, ctx: &mut TxContext) {
         let (treasury, metadata) = coin::create_currency(
             witness, 
             9, // Décimales
-            b"GEM", // Symbole
-            b"Gem Token", // Nom
+            b"CIM", // Symbole
+            b"Cim Token", // Nom
             b"Monnaie du jeu", // Description
             option::none(), // Url de l'icone
             ctx

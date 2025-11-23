@@ -3,14 +3,16 @@ module game::monster_hatchery {
     use std::string::String;
     use sui::coin::Coin;
     use sui::balance::{Self, Balance};
-    use game::gem_currency::GEM_CURRENCY;
+    use game::cim_currency::CIM_CURRENCY;
 
     const PRICE_COMMON: u64 = 100;
     const PRICE_RARE: u64 = 500;
     const PRICE_EPIC: u64 = 1000;
+    const PRICE_LEGENDARY: u64 = 5000;
     const RARITY_COMMON: u8 = 1;
     const RARITY_RARE: u8 = 2;
     const RARITY_EPIC: u8 = 3;
+    const RARITY_LEGENDARY: u8 = 4;
     const ENotEnoughMoney: u64 = 0;
     const EUnknownRarity: u64 = 1;
 
@@ -27,17 +29,18 @@ module game::monster_hatchery {
         experience: u64 
     }
 
-    public struct Shop has key { id: UID, profits: Balance<GEM_CURRENCY> }
+    public struct Shop has key { id: UID, profits: Balance<CIM_CURRENCY> }
 
     fun init(ctx: &mut TxContext) {
         transfer::share_object(Shop { id: object::new(ctx), profits: balance::zero() });
     }
 
     #[allow(lint(self_transfer))]
-    public fun buy_egg(shop: &mut Shop, payment: &mut Coin<GEM_CURRENCY>, rarity_choice: u8, ctx: &mut TxContext) {
+    public fun buy_egg(shop: &mut Shop, payment: &mut Coin<CIM_CURRENCY>, rarity_choice: u8, ctx: &mut TxContext) {
         let price = if (rarity_choice == RARITY_COMMON) { PRICE_COMMON }
         else if (rarity_choice == RARITY_RARE) { PRICE_RARE }
         else if (rarity_choice == RARITY_EPIC) { PRICE_EPIC }
+        else if (rarity_choice == RARITY_LEGENDARY) { PRICE_LEGENDARY }
         else { abort EUnknownRarity };
 
         assert!(payment.value() >= price, ENotEnoughMoney);
@@ -53,7 +56,8 @@ module game::monster_hatchery {
         object::delete(id); 
         
         let time_factor = clock.timestamp_ms(); 
-        let (base_str, base_agi, base_int) = if (rarity == RARITY_COMMON) { (5, 5, 5) } else if (rarity == RARITY_RARE) { (15, 15, 15) } else { (30, 30, 30) };
+        let (base_str, base_agi, base_int) = if (rarity == RARITY_COMMON) { (5, 5, 5) } else if (rarity == RARITY_RARE) { (15, 15, 15) } else if (rarity == RARITY_EPIC) { (30, 30, 30) }
+        else { (60, 60, 60) };
         let random_bonus = ((time_factor % 10) as u64);
 
         transfer::public_transfer(Monster {
