@@ -20,11 +20,13 @@ const queryClient = new QueryClient();
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-        <EnokiFlowProvider apiKey={ENOKI_API_KEY}>
-          <WalletProvider autoConnect>{children}</WalletProvider>
-        </EnokiFlowProvider>
-      </SuiClientProvider>
+      <EnokiFlowProvider apiKey={ENOKI_API_KEY}>
+        <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+          <WalletProvider autoConnect={false}>
+            {children}
+          </WalletProvider>
+        </SuiClientProvider>
+      </EnokiFlowProvider>
     </QueryClientProvider>
   );
 }
