@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@mysten/enoki": "^0.12.12",
+    "@mysten/sui.js": "^0.54.1",
     "lucide-react": "^0.554.0"
   },
   "devDependencies": {
