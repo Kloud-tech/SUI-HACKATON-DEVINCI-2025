@@ -30,13 +30,12 @@ export const RARITY_LABELS: Record<EggRarity, string> = {
   legendary: 'Legendary',
 };
 
-const RARITY_IMAGE_BASE = process.env.NEXT_PUBLIC_RARITY_IMAGE_BASE ?? '/api/rarity-art?rarity=';
-
+// Images des œufs depuis /public
 export const RARITY_IMAGES: Record<EggRarity, string> = {
-  common: `${RARITY_IMAGE_BASE}common`,
-  rare: `${RARITY_IMAGE_BASE}rare`,
-  epic: `${RARITY_IMAGE_BASE}epic`,
-  legendary: `${RARITY_IMAGE_BASE}legendary`,
+  common: '/egg_commune.png',
+  rare: '/egg_rare.png',
+  epic: '/egg_epic.png',
+  legendary: '/egg_legendary.png',
 };
 
 export const MIST_PER_SUI = 1_000_000_000n;

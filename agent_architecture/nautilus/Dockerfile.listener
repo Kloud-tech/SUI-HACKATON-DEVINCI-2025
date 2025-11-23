@@ -17,6 +17,8 @@ COPY battle_engine.py .
 COPY battle_orchestrator.py .
 COPY battle_request_listener.py .
 COPY nautilus_enclave.py .
+COPY monster_manager.py .
+COPY monster_api.py .
 COPY app.py .
 
 # Environment defaults (override with .env)

@@ -18,7 +18,6 @@ import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify
 
 # Import Gemini AI (optionnel)
 try:
@@ -710,58 +709,6 @@ class ChimeraAgent:
         print(f"[TEE] Combat signé et attesté cryptographiquement\n")
         
         return battle_memory
-    
-    def run_api_server(self):
-        """Démarre le serveur Flask API pour les combats à la demande"""
-        app = Flask(__name__)
-        
-        # Capturer self dans la closure
-        agent = self
-        
-        @app.route('/health', methods=['GET'])
-        def health():
-            """Endpoint de santé"""
-            return jsonify({
-                "status": "running",
-                "agent": "chimera-battle-agent",
-                "tee_enabled": True,
-                "gemini_enabled": os.getenv("USE_GEMINI", "false") == "true"
-            })
-        
-        @app.route('/battle', methods=['POST'])
-        def trigger_battle():
-            """Déclenche un combat sur demande"""
-            try:
-                data = request.get_json() or {}
-                monster1_data = data.get('monster1')
-                monster2_data = data.get('monster2')
-                
-                # Exécuter le combat
-                result = agent.execute_battle(monster1_data, monster2_data)
-                
-                return jsonify({
-                    "success": True,
-                    "battle": result
-                }), 200
-                
-            except Exception as e:
-                return jsonify({
-                    "success": False,
-                    "error": str(e)
-                }), 500
-        
-        @app.route('/status', methods=['GET'])
-        def status():
-            """Statut de l'agent"""
-            return jsonify({
-                "mode": "battle",
-                "tee_pcr0": agent.enclave.pcrs["PCR0"][:32],
-                "public_key": agent.enclave.get_public_key_hex()[:32]
-            })
-        
-        # Démarrer le serveur
-        port = int(os.getenv("PORT", "3000"))
-        app.run(host='0.0.0.0', port=port, debug=True)
     
     def run_battle_mode(self):
         """Mode combat NFT avec Gemini AI pour choisir les attaques"""

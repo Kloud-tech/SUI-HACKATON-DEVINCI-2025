@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { SiteHeader } from '@/components/SiteHeader';
+import { useState } from 'react';
 
 const MARKETPLACE_ITEMS = [
   {

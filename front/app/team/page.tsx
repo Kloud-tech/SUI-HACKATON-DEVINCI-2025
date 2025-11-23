@@ -6,7 +6,8 @@ import { useCurrentAccount } from '@mysten/dapp-kit';
 import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import { WalletConnectButton } from '@/components/WalletConnectButton';
-import { useWalletMonsters, type WalletMonster } from '@/src/lib/useWalletMonsters';
+import { useWalletMonsters } from '@/src/lib/useWalletMonsters';
+import type { WalletMonster } from '@/src/lib/useWalletMonsters';
 
 const SLOT_COUNT = 3;
 const STORAGE_PREFIX = 'chimera-team-slots';
@@ -40,7 +41,7 @@ function TeamPageContent({ account }: { account: ReturnType<typeof useCurrentAcc
   const [searchTerm, setSearchTerm] = useState('');
   const [draggedId, setDraggedId] = useState<string | null>(null);
 
-  const { monsters, isPending, isError, error, refetch, count } = useWalletMonsters(account?.address);
+  const { monsters, isPending, isError, error, refetch, count } = useWalletMonsters(account?.address ?? null);
 
   useEffect(() => {
     if (storageKey) {

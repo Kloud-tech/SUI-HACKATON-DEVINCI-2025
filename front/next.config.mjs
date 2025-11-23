@@ -5,13 +5,25 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
       },
-    ],
-    localPatterns: [
       {
-        pathname: '/api/rarity-art',
-        search: 'rarity=*',
+        protocol: 'https',
+        hostname: 'placehold.co',
       },
     ],
+  },
+  // Fix cross-origin warning in dev
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ];
   },
 };
 

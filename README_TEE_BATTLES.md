@@ -3,6 +3,7 @@
 ## 🚀 Quick Start (Lancer le projet complet)
 
 ### Prérequis rapides
+
 ```bash
 # Installer les outils
 brew install sui docker jq
@@ -14,6 +15,7 @@ sui --version && docker --version && jq --version
 ### Étapes pour lancer le système complet
 
 #### 1️⃣ Configurer Sui Testnet
+
 ```bash
 # Se connecter au testnet
 sui client switch --env testnet
@@ -23,6 +25,7 @@ sui client active-address
 ```
 
 #### 2️⃣ Déployer les Smart Contracts
+
 ```bash
 cd contracts/chimera_protocol
 
@@ -37,7 +40,8 @@ sui client publish --gas-budget 100000000
 # - TreasuryCap: 0x...
 ```
 
-#### 3️⃣ Créer des Monstres
+#### 3️⃣ Créer des Monstres et Important d'avoir des CIM sur son adresse
+
 ```bash
 # Mint des tokens CIM (in-game currency)
 sui client call \
@@ -74,6 +78,7 @@ done
 ```
 
 #### 4️⃣ Configurer Docker TEE Listener
+
 ```bash
 cd ../../agent_architecture/nautilus
 
@@ -107,6 +112,7 @@ docker-compose logs --tail=20 battle-listener
 ```
 
 #### 5️⃣ Déclencher un Combat !
+
 ```bash
 # Récupérer 2 monstres
 MONSTER1=$(sui client objects --json | jq -r '.[] | select(.data.type | contains("Monster")) | .data.objectId' | head -1)
@@ -125,7 +131,9 @@ docker-compose -f agent_architecture/nautilus/docker-compose.yml logs -f battle-
 ```
 
 #### ✅ Résultat attendu
+
 Vous devriez voir dans les logs Docker :
+
 ```
 INFO:battle_request_listener:⚔️  Processing battle request 1 | 0x... vs 0x...
 [1/3] Loading monsters from blockchain...
@@ -180,12 +188,14 @@ Ce système implémente un **mécanisme de combat sécurisé** pour les monstres
 ## 📋 Prérequis
 
 ### Outils nécessaires
+
 - **Docker** & **Docker Compose** (pour l'environnement TEE isolé)
 - **Sui CLI** (pour interagir avec la blockchain)
 - **Python 3.11+** (pour le développement local)
 - **jq** (pour parser les réponses JSON)
 
 ### Installation Sui CLI
+
 ```bash
 # macOS
 brew install sui
@@ -195,6 +205,7 @@ sui --version
 ```
 
 ### Configuration du wallet Sui
+
 ```bash
 # Se connecter au testnet
 sui client switch --env testnet
@@ -388,6 +399,7 @@ docker-compose logs -f battle-listener
 ```
 
 **Sortie attendue :**
+
 ```
 INFO:battle_request_listener:⚔️  Processing battle request 1 | 0x4a0054... vs 0xbca39c...
 
@@ -454,17 +466,18 @@ run_battle_and_settle(
 
 Chaque combat génère une **preuve cryptographique** avec 3 composants :
 
-1. **Signature Ed25519** 
+1. **Signature Ed25519**
+
    - Hash signé du résultat du combat
    - Prouve que le résultat vient du TEE
    - Exemple : `be8742bcf52e3d50ac8ccfa4ed481d3c...`
-
 2. **Public Key**
+
    - Identifie de manière unique le TEE
    - Permet de vérifier la signature
    - Exemple : `8c5849c6bb4e523006ea1a7c7de89db4...`
-
 3. **PCR0 (Platform Configuration Register)**
+
    - Hash de l'état du TEE
    - Prouve l'intégrité du code exécuté
    - Exemple : `e2e96abc1347c200df6cf311e5e5332b...`
@@ -484,10 +497,10 @@ public fun settle_battle(
 ) {
     // ✅ Vérification : seul le TEE peut appeler cette fonction
     assert!(ctx.sender() == config.tee_address, ENotAuthorized);
-    
+  
     // Applique les résultats
     monster_hatchery::update_stats_after_battle(winner, xp_gain);
-    
+  
     // Émet un événement de confirmation
     event::emit(BattleEvent {
         request_id,
@@ -538,28 +551,35 @@ docker-compose logs battle-listener 2>&1 | grep "Processing battle"
 ### Problèmes courants
 
 #### ❌ `ConnectionError: Failed to resolve 'fullnode.testnet.sui.io'`
-**Cause** : Le container Docker n'a pas accès au réseau externe  
+
+**Cause** : Le container Docker n'a pas accès au réseau externe
 **Solution** : Redémarrer Docker ou vérifier la config réseau
+
 ```bash
 docker-compose down
 docker-compose up -d
 ```
 
 #### ❌ `FileNotFoundError: [Errno 2] No such file or directory: 'sui'`
-**Cause** : Le binaire Sui CLI n'est pas dans le container  
+
+**Cause** : Le binaire Sui CLI n'est pas dans le container
 **Solution** : Le code utilise maintenant un fallback (déjà corrigé)
 
 #### ❌ `TypeMismatch` lors de `request_battle`
-**Cause** : Les monstres ne sont pas du bon package  
+
+**Cause** : Les monstres ne sont pas du bon package
 **Solution** : Utiliser des monstres créés avec le même package que BattleConfig
+
 ```bash
 # Vérifier le type d'un monstre
 sui client object YOUR_MONSTER_ID | grep objType
 ```
 
 #### ⚠️ `Could not persist cursor file`
-**Cause** : `.battle_listener.cursor` est un répertoire au lieu d'un fichier  
+
+**Cause** : `.battle_listener.cursor` est un répertoire au lieu d'un fichier
 **Solution** :
+
 ```bash
 rm -rf agent_architecture/nautilus/.battle_listener.cursor
 touch agent_architecture/nautilus/.battle_listener.cursor
@@ -600,6 +620,7 @@ docker images | grep nautilus-battle-listener
 ## 🎯 Flux Complet (Résumé)
 
 ### Côté Joueur
+
 1. Mint des tokens CIM
 2. Achète des œufs avec les CIM
 3. Fait éclore les œufs en monstres
@@ -608,6 +629,7 @@ docker images | grep nautilus-battle-listener
 6. Vérifie les résultats via les événements blockchain
 
 ### Côté Docker (Automatique)
+
 1. Écoute les événements `BattleRequest` via RPC polling
 2. Détecte un nouvel événement → charge les stats des monstres
 3. Simule le combat dans le TEE avec `battle_engine.py`
@@ -616,6 +638,7 @@ docker images | grep nautilus-battle-listener
 6. Le smart contract vérifie la signature et applique les résultats
 
 ### Côté Smart Contract
+
 1. Reçoit `request_battle()` → incrémente `next_request_id`
 2. Émet `BattleRequest` event avec les IDs des monstres
 3. Reçoit `settle_battle()` depuis le TEE
@@ -630,6 +653,7 @@ docker images | grep nautilus-battle-listener
 ### Modifier l'intervalle de polling
 
 Dans `.env` :
+
 ```bash
 BATTLE_REQUEST_POLL_INTERVAL=5  # Vérifier toutes les 5 secondes
 ```
@@ -692,15 +716,18 @@ run_battle_and_settle(
 ## 🚀 Prochaines Étapes
 
 ### Settlement On-Chain Complet
+
 - [ ] Installer Sui CLI dans Docker
 - [ ] Implémenter le settlement RPC direct
 - [ ] Gérer les gas fees automatiquement
 
 ### Intégration Walrus
+
 - [ ] Upload des battle logs sur Walrus
 - [ ] Stocker les blob IDs dans les événements
 
 ### Production
+
 - [ ] Vrai TEE Nautilus (pas de simulation)
 - [ ] Monitoring avec Prometheus/Grafana
 - [ ] Auto-scaling du listener

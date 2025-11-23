@@ -35,15 +35,15 @@ const NAV_ITEMS = [
     href: '/team',
   },
   {
+    label: 'Battle',
+    href: '/battle',
+  },
+  {
     label: 'Market',
     links: [
       { label: 'Monsters', href: '/marketplace' },
       { label: 'Equipment', href: '/marketplace?view=equipment' },
     ],
-  },
-  {
-    label: 'Equipment',
-    href: '/equipment',
   },
   {
     label: 'Leaderboard',

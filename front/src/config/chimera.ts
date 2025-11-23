@@ -1,16 +1,16 @@
 export const NETWORK = "testnet";
 
-// 1. L'adresse du Package (Nouveau déploiement)
-export const PACKAGE_ID = "0x58310d0f0ba3013e87b32b538b6639dbb1586d34b3328988a63469069d415cf3";
+// Package ID du déploiement actuel
+export const PACKAGE_ID = "0x32d29cf53a8b7285068867faaa7867bc675b2681abdd4dfa57fbeb5908c8e45b";
 
-// 2. L'adresse de la Boutique (Objet Partagé)
-export const SHOP_ID = "0xb2242ae1ede6cfc3901b3edd0f39f097396670059df9c05dd5b8fd2dd0ce85af";
+// Shop (Objet Partagé)
+export const SHOP_ID = "0x881fb49e959b1f2ac3cc3c4d094485d78562cbbcf50dd208306727d377b27aac";
 
-// 3. L'adresse de la Config de Combat (Objet Partagé pour le TEE)
-export const BATTLE_CONFIG_ID = "0x9fd8ab371ea32fac24bd9879d09299da2c86359385b8b1ba50e59e4fbc39b7ae";
+// BattleConfig (Objet Partagé pour le TEE)
+export const BATTLE_CONFIG_ID = "0x088982771baa5fb27dfbe683a2e9a3661c4ac986f3594a1243fa901ac9b9ee25";
 
-// 4. Le Type de la Monnaie (ATTENTION : C'est maintenant du CIM !)
+// Type de la monnaie CIM
 export const CIM_COIN_TYPE = `${PACKAGE_ID}::cim_currency::CIM_CURRENCY`;
 
-// 5. L'Horloge (Toujours 0x6)
+// Horloge Sui (toujours 0x6)
 export const CLOCK_ID = "0x6";

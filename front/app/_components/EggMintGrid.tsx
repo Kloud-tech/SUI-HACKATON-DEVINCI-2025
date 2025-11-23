@@ -171,7 +171,9 @@ export function EggMintGrid() {
         updateStatus(rarity, { state: 'pending', hint: 'Awaiting wallet signature…' });
 
         const tx = buildBuyEggTx(rarity, coinObjectId);
-        const result = await signAndExecuteTransaction({ transaction: tx });
+        const result = await signAndExecuteTransaction({
+          transaction: tx,
+        });
         const digest = 'digest' in result ? result.digest : undefined;
 
         if (!digest) {

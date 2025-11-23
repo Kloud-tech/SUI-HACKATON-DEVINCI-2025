@@ -15,6 +15,7 @@ import requests
 
 from battle_engine import Monster, BattleEngine
 from nautilus_enclave import get_enclave
+from monster_manager import MonsterManager
 
 # === CONFIGURATION ===
 NIMBUS_BRIDGE_URL = os.getenv("NIMBUS_BRIDGE_URL", "http://nimbus-bridge:3001")
@@ -62,30 +63,30 @@ def _coerce_int(value: Any, default: int = 0) -> int:
 # === MONSTER LOADING FROM BLOCKCHAIN ===
 def fetch_monster_from_chain(monster_object_id: str) -> Monster:
     """
-    Fetch monster stats from the blockchain using Sui RPC.
-    In production, this would query the actual object.
-    For now, we'll simulate with mock data.
+    Fetch monster stats from the blockchain using MonsterManager.
+    Returns a Monster object ready for battle simulation.
     """
+    manager = MonsterManager()
     try:
-        result = _rpc_call("sui_getObject", [
-            monster_object_id,
-            {"showContent": True}
-        ])
-        data = result.get("data") or {}
-        content = data.get("content") or {}
-        fields = content.get("fields") or {}
-
+        monster_data = manager.get_monster_by_id(monster_object_id)
+        
+        if not monster_data:
+            logging.warning("⚠️  Monster %s not found - using fallback stats", monster_object_id)
+            return Monster(monster_object_id, "Unknown", 30, 30, 30, 1)
+        
         monster = Monster(
             monster_object_id,
-            _decode_move_string(fields.get("name")) or f"Monster {monster_object_id[:6]}",
-            _coerce_int(fields.get("strength"), 30),
-            _coerce_int(fields.get("agility"), 30),
-            _coerce_int(fields.get("intelligence"), 30),
-            _coerce_int(fields.get("level"), 1)
+            monster_data["name"],
+            monster_data["strength"],
+            monster_data["agility"],
+            monster_data["intelligence"],
+            monster_data["level"]
         )
+        logging.info(f"✅ Loaded monster: {monster.name} (Lvl {monster.level}) - STR:{monster.strength} AGI:{monster.agility} INT:{monster.intelligence}")
         return monster
+        
     except Exception as exc:
-        logging.warning("⚠️  Unable to fetch monster %s from chain (%s) - using fallback stats", monster_object_id, exc)
+        logging.error("❌ Error fetching monster %s: %s - using fallback", monster_object_id, exc)
         return Monster(monster_object_id, "Unknown", 30, 30, 30, 1)
 
 

@@ -1,6 +1,4 @@
 # Nautilus Hello World Dependencies
 requests
-flask
 pynacl
 google-generativeai==0.8.3
-

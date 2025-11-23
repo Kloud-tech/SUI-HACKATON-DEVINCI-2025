@@ -32,7 +32,9 @@ export function HatchEggPanel() {
 
     try {
       const tx = buildHatchEggTx(eggId, monsterName || 'Unnamed');
-      const result = await signAndExecuteTransaction({ transaction: tx });
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+      });
       const txDigest = 'digest' in result ? result.digest : undefined;
 
       if (!txDigest) {
