@@ -17,6 +17,7 @@ import {
 } from '../src/config/sui';
 import { buildBuyEggTx } from '../src/lib/buildBuyEggTx';
 
+
 type MintedEgg = {
   objectId: string;
   rarity: number;
@@ -32,23 +33,28 @@ export default function Home() {
   const [loadingRarity, setLoadingRarity] = useState<number | null>(null);
 
   const handleBuy = async (rarity: number) => {
+    // Pas de wallet connecté → on demande d'utiliser le bouton du header
     if (!account) {
-      alert('Connecte ton wallet d\'abord 🙂');
+      alert("Connecte ton wallet avec le bouton en haut à droite 🙂");
       return;
     }
 
     try {
       setLoadingRarity(rarity);
 
+      // Construire la transaction Move pour eggs::buy_egg
       const tx = buildBuyEggTx(rarity);
 
+      // Envoyer la transaction au wallet (Slush va ouvrir la pop-up de signature)
       const result: any = await signAndExecute({
         transaction: tx,
-      } as any, {
-        showEffects: true,
-        showObjectChanges: true,
-      } as any);
+        options: {
+          showEffects: true,
+          showObjectChanges: true,
+        },
+      });
 
+      // Chercher l'EggNFT créé dans les objectChanges
       const created = result?.objectChanges?.find(
         (c: any) =>
           c.type === 'created' &&
@@ -76,9 +82,9 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white relative overflow-hidden font-sans">
       {/* Subtle animated background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-400 to-blue-400 rounded-lg rotate-12 animate-pulse"></div>
-        <div className="absolute bottom-40 right-20 w-40 h-40 bg-gradient-to-br from-pink-400 to-orange-400 rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-lg -rotate-12 animate-pulse delay-500"></div>
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-400 to-blue-400 rounded-lg rotate-12 animate-pulse" />
+        <div className="absolute bottom-40 right-20 w-40 h-40 bg-gradient-to-br from-pink-400 to-orange-400 rounded-full animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-lg -rotate-12 animate-pulse delay-500" />
       </div>
 
       {/* Header */}
@@ -111,13 +117,15 @@ export default function Home() {
                   />
                 </div>
                 <div className="mt-4 text-center">
-                  <p className="text-2xl font-black mb-2 text-gray-700 font-bangers tracking-wider">{RARITY_LABELS[r]}</p>
+                  <p className="text-2xl font-black mb-2 text-gray-700 font-bangers tracking-wider">
+                    {RARITY_LABELS[r]}
+                  </p>
                   <p className="text-3xl font-black text-yellow-500 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)] mb-4 font-bangers tracking-widest">
                     {Number(EGG_PRICES_MIST[r]) / 1_000_000_000} SUI
                   </p>
                   <Button
                     onClick={() => handleBuy(r)}
-                    disabled={loadingRarity === r || !account}
+                    disabled={loadingRarity === r}
                     size="lg"
                     className="w-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold shadow-lg shadow-cyan-500/50 font-bangers text-xl tracking-wide"
                   >
@@ -153,7 +161,7 @@ export default function Home() {
             </div>
           )}
         </div>
-        
+
         <ProjectInfo />
       </main>
 
