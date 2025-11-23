@@ -13,6 +13,9 @@ Cargo.lock
 build/
 dist/
 target/
+.next/
+out/
+*.tsbuildinfo
 *.o
 *.a
 *.so
@@ -30,24 +33,14 @@ target/
 # IDE and Editor
 .vscode/
 .idea/
+.vim/
 *.swp
 *.swo
-*~
-.DS_Store
 *.sublime-project
 *.sublime-workspace
-.vim/
 *.iml
 *.code-workspace
-
-# OS files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+*~
 
 # Logs
 *.log
@@ -56,7 +49,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Move/Sui specific
+# Testing / Runtime data
+coverage/
+.nyc_output/
+pids/
+*.pid
+*.seed
+*.pid.lock
+secrets/
+.env.production.local
+
+# Move / Sui specific
 .trace
 .coverage*
 traces/
@@ -68,14 +71,20 @@ Move.lock
 *.bak
 *.swp
 .*.swp
-*~
 *.swj
 
-# Runtime
-secrets/
-.env.production.local
-
-# Cache
+# Cache / deployment
 .cache/
+.turbo/
+.vercel/
 .eslintcache
 .stylelintcache
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db

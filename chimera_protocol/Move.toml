@@ -10,4 +10,3 @@ Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-fram
 [addresses]
 # C'est cette ligne qui corrige l'erreur sur "game"
 game = "0x0"
-suppression front + debut test sur suitestnet
