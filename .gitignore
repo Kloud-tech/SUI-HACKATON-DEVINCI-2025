@@ -1,48 +1,90 @@
+# Root .gitignore for entire Chimera project
+
 # Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
+.npm
+.yarn
 pnpm-lock.yaml
-
-# Environment variables
-.env
-.env.local
-.env.*.local
+yarn.lock
+package-lock.json
+Cargo.lock
 
 # Build outputs
-dist/
 build/
+dist/
+target/
 .next/
 out/
 *.tsbuildinfo
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
 
-# IDE & Editor
+# Environment variables
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# IDE and Editor
 .vscode/
 .idea/
+.vim/
 *.swp
 *.swo
-*~
-.DS_Store
-*.sublime-workspace
 *.sublime-project
+*.sublime-workspace
+*.iml
+*.code-workspace
+*~
 
-# OS
-Thumbs.db
-.DS_Store
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Testing
+# Testing / Runtime data
 coverage/
 .nyc_output/
-
-# Runtime data
 pids/
 *.pid
 *.seed
 *.pid.lock
+secrets/
+.env.production.local
 
-# Misc
+# Move / Sui specific
+.trace
+.coverage*
+traces/
+Move.lock
+.move
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.*.swp
+*.swj
+
+# Cache / deployment
 .cache/
 .turbo/
 .vercel/
+.eslintcache
+.stylelintcache
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
