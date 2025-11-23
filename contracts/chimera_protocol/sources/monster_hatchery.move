@@ -74,14 +74,32 @@ module game::monster_hatchery {
     public fun get_name(monster: &Monster): String { monster.name }
 
     // Permet au module de combat de mettre à jour l'XP
-    public fun update_stats_after_battle(monster: &mut Monster, xp_gain: u64) {
+    public(package) fun update_stats_after_battle(monster: &mut Monster, xp_gain: u64) {
         monster.experience = monster.experience + xp_gain;
-        if (monster.experience >= 100) {
+        
+        // 2. "while" : Gère la montée de plusieurs niveaux d'un coup
+        while (monster.experience >= 100) {
             monster.level = monster.level + 1;
-            monster.experience = 0;
-            monster.strength = monster.strength + 2; // Le monstre devient plus fort !
-            monster.agility = monster.agility + 1;
-            monster.intelligence = monster.intelligence + 1;
+            monster.experience = monster.experience - 100; 
+            
+            // 3. "Spécialisation" : On booste la stat dominante
+            
+            // Cas A : Le Guerrier (Force dominante)
+            if (monster.strength >= monster.agility && monster.strength >= monster.intelligence) {
+                monster.strength = monster.strength + 3; // Gros bonus Force
+                monster.agility = monster.agility + 1;
+                // Pas d'intelligence pour le guerrier
+            }
+            // Cas B : L'Assassin (Agilité dominante)
+            else if (monster.agility > monster.strength && monster.agility >= monster.intelligence) {
+                monster.strength = monster.strength + 1;
+                monster.agility = monster.agility + 3; // Gros bonus Agilité
+            }
+            // Cas C : Le Mage (Intelligence dominante)
+            else {
+                monster.agility = monster.agility + 1;
+                monster.intelligence = monster.intelligence + 3; // Gros bonus Intelligence
+            };
         };
     }
 }
