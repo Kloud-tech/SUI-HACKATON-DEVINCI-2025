@@ -2,6 +2,7 @@
 
 # Dependencies
 node_modules/
+.venv/
 .npm
 .yarn
 pnpm-lock.yaml
